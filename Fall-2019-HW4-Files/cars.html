@@ -8,9 +8,9 @@
 </head>
 
 <body>
-  
+
 	<!-- #TODO Table goes here -->
-    <div ng-app="myApp" ng-controller="customersCtrl">
+    <div ng-app="myApp" ng-controller="displayCtrl">
       <table id="carsTable">
         <tr>
           <th>Manufacturer</th>
@@ -20,6 +20,13 @@
           <th>Price</th>
           <th>Option</th>
         </tr>
+        <tr ng-repeat="car in carsData">
+          <td>{{car.manufacturer}}</td>
+          <td>{{car.model}}</td>
+          <td>{{car.year}}</td>
+          <td>{{car.stock}}</td>
+          <td>{{car.price}}</td>
+        </tr>
       </table>
     </div>
 
@@ -27,6 +34,10 @@
   <script src="cars.js"></script>
   <script>
   	//Your script goes here
+    var app = angular.module('myApp', []);
+    app.controller('displayCtrl', function ($scope) {
+      $scope.carsData = cars;
+    })
   </script>
 </body>
 </html>
