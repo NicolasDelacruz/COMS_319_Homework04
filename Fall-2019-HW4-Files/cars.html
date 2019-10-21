@@ -24,8 +24,11 @@
           <td>{{car.manufacturer}}</td>
           <td>{{car.model}}</td>
           <td>{{car.year}}</td>
-          <td>{{car.stock}}</td>
-          <td>{{car.price}}</td>
+          <td>{{car.stock + count}}</td>
+          <td>{{car.price | currency}}</td>
+          <td>
+            <button ng-click="count = count + 1" ng-init="count=0"> Increment</button>
+          </td>
         </tr>
       </table>
     </div>
@@ -37,7 +40,7 @@
     var app = angular.module('myApp', []);
     app.controller('displayCtrl', function ($scope) {
       $scope.carsData = cars;
-    })
+    });
   </script>
 </body>
 </html>
