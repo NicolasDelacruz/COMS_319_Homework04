@@ -15,19 +15,21 @@
         <tr>
           <th>Manufacturer</th>
           <th>Model</th>
-          <th>Year</th>
+          <th>
+            <button ng-click="sortData('year')" ng-class="getSortClass('year')">Year</button>
+          </th>
           <th>Stock</th>
           <th>Price</th>
           <th>Option</th>
         </tr>
-        <tr ng-repeat="car in carsData">
+        <tr ng-repeat="car in carsData | orderBy:sortColumn:reverseSort">
           <td>{{car.manufacturer}}</td>
           <td>{{car.model}}</td>
           <td>{{car.year}}</td>
           <td>{{car.stock + count}}</td>
           <td>{{car.price | currency}}</td>
           <td>
-            <button ng-click="count = count + 1" ng-init="count=0"> Increment</button>
+            <button ng-click="count = count + 1" ng-init="count=0">Increment</button>
           </td>
         </tr>
       </table>
@@ -40,6 +42,19 @@
     var app = angular.module('myApp', []);
     app.controller('displayCtrl', function ($scope) {
       $scope.carsData = cars;
+      $scope.column = 'year';
+      $scope.reverseSort = false;
+      $scope.sortData = function(column){
+        $scope.reverseSort = ($scope.sortColumn == column) ? !$scope.reverseSort : false;
+        $scope.sortColumn = column;
+      }
+      $scope.getSortClass = function(column){
+        if($scope.sortColumn == column){
+          return $scope.reverseSort ? 'arrowDown' : 'arrowUp';
+        }
+
+        return '';
+      }
     });
   </script>
 </body>
