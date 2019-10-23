@@ -13,7 +13,11 @@
     <div ng-app="myApp" ng-controller="displayCtrl">
       <table id="carsTable">
         <tr>
-          <th>Manufacturer</th>
+          <th>Manufacturer
+            <select ng-model="selected_manufacturer" ng-options="car.manufacturer for car in carsData | unique:'manufacturer'">
+              <option value="">All</option>
+            </select>
+          </th>
           <th>Model</th>
           <th>
             <button ng-click="sortData('year')" ng-class="getSortClass('year')">Year</button>
@@ -22,7 +26,7 @@
           <th>Price</th>
           <th>Option</th>
         </tr>
-        <tr ng-repeat="car in carsData | orderBy:sortColumn:reverseSort">
+        <tr ng-repeat="car in carsData | orderBy:sortColumn:reverseSort | filter:selected_manufacturer.manufacturer">
           <td>{{car.manufacturer}}</td>
           <td>{{car.model}}</td>
           <td>{{car.year}}</td>
@@ -39,22 +43,42 @@
   <script src="cars.js"></script>
   <script>
   	//Your script goes here
-    var app = angular.module('myApp', []);
+    let app = angular.module('myApp', []);
     app.controller('displayCtrl', function ($scope) {
+
       $scope.carsData = cars;
+
       $scope.column = 'year';
+
       $scope.reverseSort = false;
+
       $scope.sortData = function(column){
         $scope.reverseSort = ($scope.sortColumn == column) ? !$scope.reverseSort : false;
         $scope.sortColumn = column;
       }
+
       $scope.getSortClass = function(column){
         if($scope.sortColumn == column){
           return $scope.reverseSort ? 'arrowDown' : 'arrowUp';
         }
-
         return '';
       }
+    });
+
+    app.filter("unique", function() {
+      return function(collection, keyname) {
+        let output = [];
+        let keys = [];
+        angular.forEach(collection, function(item) {
+          let key = item[keyname]
+
+          if (keys.indexOf(key) === -1) {
+            keys.push(key);
+            output.push(item);
+          }
+        });
+        return output;
+      };
     });
   </script>
 </body>
