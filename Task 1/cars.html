@@ -1,0 +1,85 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Homework 4</title>
+
+</head>
+
+<body>
+
+	<!-- #TODO Table goes here -->
+    <div ng-app="myApp" ng-controller="displayCtrl">
+      <table id="carsTable">
+        <tr>
+          <th>Manufacturer
+            <select ng-model="selected_manufacturer" ng-options="car.manufacturer for car in carsData | unique:'manufacturer'">
+              <option value="">All</option>
+            </select>
+          </th>
+          <th>Model</th>
+          <th>
+            <button ng-click="sortData('year')" ng-class="getSortClass('year')">Year</button>
+          </th>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Option</th>
+        </tr>
+        <tr ng-repeat="car in carsData | orderBy:sortColumn:reverseSort | filter:selected_manufacturer.manufacturer">
+          <td>{{car.manufacturer}}</td>
+          <td>{{car.model}}</td>
+          <td>{{car.year}}</td>
+          <td>{{car.stock + count}}</td>
+          <td>{{car.price | currency}}</td>
+          <td>
+            <button ng-click="count = count + 1" ng-init="count=0">Increment</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+  <script src="cars.js"></script>
+  <script>
+  	//Your script goes here
+    let app = angular.module('myApp', []);
+    app.controller('displayCtrl', function ($scope) {
+
+      $scope.carsData = cars;
+
+      $scope.column = 'year';
+
+      $scope.reverseSort = false;
+
+      $scope.sortData = function(column){
+        $scope.reverseSort = ($scope.sortColumn == column) ? !$scope.reverseSort : false;
+        $scope.sortColumn = column;
+      }
+
+      $scope.getSortClass = function(column){
+        if($scope.sortColumn == column){
+          return $scope.reverseSort ? 'arrowDown' : 'arrowUp';
+        }
+        return '';
+      }
+    });
+
+    app.filter("unique", function() {
+      return function(collection, keyname) {
+        let output = [];
+        let keys = [];
+        angular.forEach(collection, function(item) {
+          let key = item[keyname]
+
+          if (keys.indexOf(key) === -1) {
+            keys.push(key);
+            output.push(item);
+          }
+        });
+        return output;
+      };
+    });
+  </script>
+</body>
+</html>
